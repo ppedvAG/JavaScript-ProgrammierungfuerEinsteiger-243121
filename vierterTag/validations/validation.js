@@ -32,4 +32,34 @@ passwordInp.addEventListener("focus", function () {
     typeMismatch - Wert ist nicht der richtige Typ, z.B email ohne @
     valid - Gibt true zurück, wenn alles gültig ist
     valueMissing - Wenn das Input-Element das Attribut required hat und das Feld leer ist
+
+    keyup
 */
+
+const zipCode = document.querySelector("#zipCode");
+const country = document.querySelector("#country");
+
+function checkPLZ() {
+
+    let constraints = {
+        ch: ['^(CH-)?\\d{4}$', "Schweizerische PLZ müssen aus genau 4 Zeichen bestehen."],
+        at: ['^(AT-)?\\d{4}$', "Österreichische PLZ müssen aus genau 4 Zeichen bestehen."],
+        fr: ['^(F-)?\\d{5}$', "Französische PLZ müssen aus genau 5 Zeichen bestehen."],
+    }
+
+    const countryValue = country.value;
+    const zipCodeValue = zipCode.value;
+
+    let constraint = new RegExp(constraints[countryValue][0], "");
+
+    if (constraint.test(zipCodeValue)) {
+        zipCode.setCustomValidity("");
+    }
+    else {
+        zipCode.setCustomValidity(constraints[countryValue][1]);
+        zipCode.reportValidity();
+    }
+}
+
+zipCode.addEventListener("input", checkPLZ);
+country.addEventListener("input", checkPLZ);
